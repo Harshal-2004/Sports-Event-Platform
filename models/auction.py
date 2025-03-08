@@ -1,6 +1,6 @@
 
 from datetime import datetime
-from bson.objectid import ObjectId
+from bson import ObjectId
 
 class Auction:
     def __init__(self, title, description, starting_price, current_price, end_date, status="active", _id=None):
