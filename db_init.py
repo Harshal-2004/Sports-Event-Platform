@@ -18,6 +18,7 @@ def init_database():
         services_collection.delete_many({})
         packages_collection.delete_many({})
         auctions_collection.delete_many({})
+        payments_collection.delete_many({})
         
         print("Existing collections cleared.")
         

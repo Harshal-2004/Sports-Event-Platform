@@ -1,4 +1,3 @@
-
 import os
 from dotenv import load_dotenv
 
@@ -22,3 +21,4 @@ with app.app_context():
     services_collection = mongo.db.services
     packages_collection = mongo.db.packages
     auctions_collection = mongo.db.auctions
+    payments_collection = mongo.db.payments

@@ -4,11 +4,12 @@ import os
 import logging
 from datetime import datetime, timedelta
 from bson import ObjectId
-from app import app, mongo, events_collection, services_collection, packages_collection, auctions_collection
+from app import app, mongo, events_collection, services_collection, packages_collection, auctions_collection, payments_collection
 from models.event import Event
 from models.service import Service
 from models.package import Package
 from models.auction import Auction
+from models.payment import Payment
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -237,6 +238,45 @@ def place_bid(auction_id):
         })
     except Exception as e:
         logger.error(f"Error placing bid: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
+
+# Payment API endpoints
+@app.route('/api/payments', methods=['GET'])
+def get_payments():
+    """Endpoint to retrieve all payments"""
+    all_payments = list(payments_collection.find())
+    payments = [Payment.from_dict(payment).to_dict() for payment in all_payments]
+    return jsonify({
+        "status": "success",
+        "data": payments
+    })
+
+@app.route('/api/payments', methods=['POST'])
+def add_payment():
+    """Endpoint to add a new payment"""
+    try:
+        data = request.get_json()
+        payment = Payment(
+            amount=float(data.get('amount')),
+            payment_method=data.get('payment_method'),
+            status=data.get('status', 'pending'),
+            event_id=data.get('event_id'),
+            service_ids=data.get('service_ids', []),
+            package_id=data.get('package_id'),
+            auction_id=data.get('auction_id'),
+            user_info=data.get('user_info', {})
+        )
+        payment.save(payments_collection)
+        return jsonify({
+            "status": "success",
+            "message": "Payment recorded successfully",
+            "data": payment.to_dict()
+        })
+    except Exception as e:
+        logger.error(f"Error recording payment: {str(e)}")
         return jsonify({
             "status": "error",
             "message": str(e)
