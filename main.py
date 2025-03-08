@@ -111,6 +111,24 @@ def add_service():
 
 # Packages API endpoints
 @app.route('/api/packages', methods=['GET'])
+from flask import Flask, request, jsonify, render_template, session, redirect, url_for
+import os
+import logging
+from datetime import datetime
+from bson.objectid import ObjectId
+
+from app import app, mongo, events_collection, services_collection, packages_collection, auctions_collection, payments_collection
+from models.event import Event
+from models.service import Service
+from models.package import Package
+from models.auction import Auction
+from models.payment import Payment
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = app.logger
+
+@app.route('/api/packages', methods=['GET'])
 def get_packages():
     """Endpoint to retrieve all packages"""
     all_packages = list(packages_collection.find())
@@ -156,6 +174,99 @@ def get_auctions():
     })
 
 @app.route('/api/auctions', methods=['POST'])
+def create_auction():
+    """Endpoint to create a new auction"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['title', 'description', 'starting_price', 'end_date']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({
+                    "status": "error",
+                    "message": f"Missing required field: {field}"
+                }), 400
+        
+        # Create new auction
+        auction = Auction(
+            title=data['title'],
+            description=data['description'],
+            starting_price=float(data['starting_price']),
+            current_price=float(data['starting_price']),
+            end_date=datetime.fromisoformat(data['end_date'].replace('Z', '+00:00'))
+        )
+        
+        auction.save(auctions_collection)
+        
+        return jsonify({
+            "status": "success",
+            "message": "Auction created successfully",
+            "data": auction.to_dict()
+        })
+        
+    except Exception as e:
+        app.logger.error(f"Error creating auction: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+@app.route('/api/auctions/<auction_id>/bid', methods=['POST'])
+def place_bid(auction_id):
+    """Endpoint to place a bid on an auction"""
+    try:
+        data = request.get_json()
+        
+        # Validate bid amount
+        if 'bid_amount' not in data:
+            return jsonify({
+                "status": "error",
+                "message": "Missing bid amount"
+            }), 400
+        
+        bid_amount = float(data['bid_amount'])
+        
+        # Find auction
+        auction_data = auctions_collection.find_one({"_id": ObjectId(auction_id)})
+        if not auction_data:
+            return jsonify({
+                "status": "error",
+                "message": "Auction not found"
+            }), 404
+        
+        auction = Auction.from_dict(auction_data)
+        
+        # Check if auction is active
+        if auction.status != "active" or auction.end_date < datetime.utcnow():
+            return jsonify({
+                "status": "error",
+                "message": "Auction is closed"
+            }), 400
+        
+        # Check if bid is higher than current price
+        if bid_amount <= auction.current_price:
+            return jsonify({
+                "status": "error",
+                "message": "Bid must be higher than current price"
+            }), 400
+        
+        # Update auction with new bid
+        auction.current_price = bid_amount
+        auction.save(auctions_collection)
+        
+        return jsonify({
+            "status": "success",
+            "message": "Bid placed successfully",
+            "data": auction.to_dict()
+        })
+        
+    except Exception as e:
+        app.logger.error(f"Error placing bid: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 def add_auction():
     """Endpoint to add a new auction"""
     try:
