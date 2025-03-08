@@ -368,6 +368,56 @@
                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     Processing...
                 `;
+                
+                // Get the actual payment amount (without the dollar sign)
+                const totalAmount = parseFloat(document.getElementById('total').textContent.replace('$', ''));
+                
+                // Prepare payment data
+                const paymentData = {
+                    amount: totalAmount,
+                    payment_method: 'credit_card',
+                    status: 'completed',
+                    user_info: {
+                        name: document.getElementById('cardName').value,
+                        email: document.getElementById('email').value,
+                        card_last4: document.getElementById('cardNumber').value.slice(-4)
+                    }
+                };
+                
+                // Add the appropriate ID based on the order type
+                if (orderType === 'event') {
+                    const eventData = JSON.parse(localStorage.getItem('customEvent'));
+                    if (eventData && eventData.id) {
+                        paymentData.event_id = eventData.id;
+                    }
+                } else if (orderType === 'service') {
+                    const servicesData = JSON.parse(localStorage.getItem('selectedServices'));
+                    if (servicesData && servicesData.length > 0) {
+                        paymentData.service_ids = servicesData.map(service => service.id);
+                    }
+                } else if (orderType === 'package') {
+                    const package = urlParams.get('package');
+                    if (package) {
+                        // We'll need the actual package ID here, but for now we'll use a placeholder
+                        paymentData.package_id = package;
+                    }
+                }
+                
+                // Submit payment data to the server
+                fetch('/api/payments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paymentData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Payment saved:', data);
+                })
+                .catch(error => {
+                    console.error('Error saving payment:', error);
+                });
 
                 // Create a payment progress container
                 const paymentProgressContainer = document.createElement('div');

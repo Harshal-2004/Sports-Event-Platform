@@ -251,31 +251,9 @@
             };
 
             console.log('Form data:', formData); // Debug log
-
-            try {
-                const response = await fetch('/api/customize', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-                console.log('Server response:', result); // Debug log
-
-                if (result.status === 'success') {
-                    // Store event data in localStorage
-                    localStorage.setItem('customEvent', JSON.stringify(formData));
-                    // Redirect to checkout page
-                    window.location.href = 'checkout.html?type=event';
-                } else {
-                    alert('There was an error submitting your request. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('There was an error submitting your request. Please try again.');
-            }
+            
+            // Save event data and redirect to checkout
+            saveEventData(formData);
         });
     </script>
 </body>

@@ -31,12 +31,12 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 // Add animation on scroll
 function revealOnScroll() {
     var reveals = document.querySelectorAll(".reveal");
-    
+
     reveals.forEach((reveal) => {
         var windowHeight = window.innerHeight;
         var elementTop = reveal.getBoundingClientRect().top;
         var elementVisible = 150;
-        
+
         if (elementTop < windowHeight - elementVisible) {
             reveal.classList.add("active");
         }
@@ -56,3 +56,34 @@ navLinks.forEach(link => {
         }
     });
 });
+
+// Function to save event data to the server
+async function saveEventData(formData) {
+    try {
+        const response = await fetch('/api/customize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        console.log('Server response:', result);
+
+        if (result.status === 'success') {
+            // Store event data in localStorage
+            localStorage.setItem('customEvent', JSON.stringify(formData));
+            // Redirect to checkout page
+            window.location.href = 'checkout.html?type=event';
+            return true;
+        } else {
+            alert('There was an error submitting your request. Please try again.');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error submitting your request. Please try again.');
+        return false;
+    }
+}

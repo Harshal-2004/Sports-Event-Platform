@@ -4,7 +4,7 @@ from bson import json_util
 import json
 
 def view_payments():
-    """View only the contents of the payments collection"""
+    """View the contents of the payments collection"""
     with app.app_context():
         print("\n--- PAYMENTS COLLECTION ---")
         payments = list(payments_collection.find())

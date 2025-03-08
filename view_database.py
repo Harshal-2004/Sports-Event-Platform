@@ -1,5 +1,5 @@
 
-from app import app, mongo, events_collection, services_collection, packages_collection, auctions_collection
+from app import app, mongo, events_collection, services_collection, packages_collection, auctions_collection, payments_collection
 from bson import json_util
 import json
 
@@ -28,6 +28,7 @@ def view_database():
         format_collection(services_collection, "Services")
         format_collection(packages_collection, "Packages")
         format_collection(auctions_collection, "Auctions")
+        format_collection(payments_collection, "Payments")
         
         # Get database stats
         db = mongo.db
