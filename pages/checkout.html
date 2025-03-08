@@ -39,7 +39,7 @@
     <section class="py-5">
         <div class="container">
             <h1 class="text-center mb-5">Checkout</h1>
-            
+
             <div class="row">
                 <!-- Order Summary -->
                 <div class="col-md-8">
@@ -49,9 +49,9 @@
                             <div id="orderItems">
                                 <!-- Order items will be populated here -->
                             </div>
-                            
+
                             <hr>
-                            
+
                             <div class="d-flex justify-content-between">
                                 <span>Subtotal:</span>
                                 <span id="subtotal">$0.00</span>
@@ -79,11 +79,11 @@
                                         Please enter the name on your card.
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="cardNumber" class="form-label">Card Number</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="cardNumber" 
+                                        <input type="text" class="form-control" id="cardNumber"
                                                pattern="[0-9]{16}" required>
                                         <span class="input-group-text">
                                             <i class="fab fa-cc-visa me-1"></i>
@@ -98,7 +98,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="expiry" class="form-label">Expiry Date</label>
-                                        <input type="text" class="form-control" id="expiry" 
+                                        <input type="text" class="form-control" id="expiry"
                                                placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/([0-9]{2})" required>
                                         <div class="invalid-feedback">
                                             Please enter a valid expiry date (MM/YY).
@@ -106,7 +106,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="cvv" class="form-label">CVV</label>
-                                        <input type="text" class="form-control" id="cvv" 
+                                        <input type="text" class="form-control" id="cvv"
                                                pattern="[0-9]{3,4}" required>
                                         <div class="invalid-feedback">
                                             Please enter a valid CVV.
@@ -140,14 +140,14 @@
                             <div id="orderDetails">
                                 <!-- Order details will be populated here -->
                             </div>
-                            
+
                             <hr>
-                            
+
                             <div class="alert alert-info" role="alert">
                                 <i class="fas fa-info-circle me-2"></i>
                                 Management fee applies to all bookings
                             </div>
-                            
+
                             <div class="mt-3">
                                 <h4>Need Help?</h4>
                                 <a href="https://wa.me/1234567890" class="btn btn-success w-100 mb-2">
@@ -187,13 +187,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const orderType = urlParams.get('type');
         const orderItems = JSON.parse(localStorage.getItem('selectedServices')) || [];
-        
+
         // Calculate totals
         function calculateTotals(subtotalAmount) {
             const managementFeeRate = 0.10; // 10%
             const managementFeeAmount = subtotalAmount * managementFeeRate;
             const totalAmount = subtotalAmount + managementFeeAmount;
-            
+
             document.getElementById('subtotal').textContent = `$${subtotalAmount.toFixed(2)}`;
             document.getElementById('managementFee').textContent = `$${managementFeeAmount.toFixed(2)}`;
             document.getElementById('total').textContent = `$${totalAmount.toFixed(2)}`;
@@ -207,19 +207,50 @@
 
             if (orderType === 'package') {
                 const package = urlParams.get('package');
+                const packageName = package.charAt(0).toUpperCase() + package.slice(1);
                 const packagePrice = package === 'platinum' ? 5000 : 3000;
                 subtotal = packagePrice;
-                
+
                 orderItemsContainer.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <h5>${package.charAt(0).toUpperCase() + package.slice(1)} Package</h5>
+                            <h5>${packageName} Package</h5>
                             <small class="text-muted">Complete event management solution</small>
                         </div>
                         <span>$${packagePrice}</span>
                     </div>
                 `;
+
+                orderDetailsContainer.innerHTML = `
+                    <p><strong>Package Type:</strong> ${packageName}</p>
+                    <p><strong>Duration:</strong> Full Event</p>
+                    <p><strong>Services Included:</strong> All Core Services</p>
+                `;
+            } else if (orderType === 'event') {
+                // Handle custom event data
+                const eventData = JSON.parse(localStorage.getItem('customEvent')) || {};
+                const basePrice = 1000; // Base price for custom events
+                subtotal = basePrice;
+
+                orderItemsContainer.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h5>Custom Event Package</h5>
+                            <small class="text-muted">Customized event management</small>
+                        </div>
+                        <span>$${basePrice}</span>
+                    </div>
+                `;
+
+                orderDetailsContainer.innerHTML = `
+                    <p><strong>Event Type:</strong> Custom</p>
+                    <p><strong>Sports:</strong> ${eventData.sports ? eventData.sports.join(', ') : 'Not specified'}</p>
+                    <p><strong>Location:</strong> ${eventData.location || 'Not specified'}</p>
+                    <p><strong>Date:</strong> ${eventData.eventDate || 'Not specified'}</p>
+                    <p><strong>Participants:</strong> ${eventData.participants || 'Not specified'}</p>
+                `;
             } else if (orderItems.length > 0) {
+                // Handle individual services
                 orderItemsContainer.innerHTML = orderItems.map(item => `
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
@@ -229,19 +260,34 @@
                         <span>$${item.price}</span>
                     </div>
                 `).join('');
-                
+
                 subtotal = orderItems.reduce((sum, item) => sum + item.price, 0);
+
+                orderDetailsContainer.innerHTML = `
+                    <p><strong>Number of Services:</strong> ${orderItems.length}</p>
+                    <p><strong>Service Type:</strong> Individual Services</p>
+                `;
             }
 
             calculateTotals(subtotal);
+
+            // Show empty cart message if no items
+            if (subtotal === 0) {
+                orderItemsContainer.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No items in cart. Please select a package or services first.
+                    </div>
+                `;
+            }
         }
 
         // Form validation and submission
         const paymentForm = document.getElementById('paymentForm');
-        
+
         paymentForm.addEventListener('submit', function(event) {
             event.preventDefault();
-            
+
             if (!paymentForm.checkValidity()) {
                 event.stopPropagation();
             } else {
@@ -263,22 +309,21 @@
                         Payment successful! A confirmation email has been sent to your inbox.
                     `;
                     paymentForm.parentNode.insertBefore(successAlert, paymentForm.nextSibling);
-                    
-                    // Reset form
+
+                    // Reset form and storage
                     paymentForm.reset();
                     submitButton.disabled = false;
                     submitButton.innerHTML = 'Pay Now';
-                    
-                    // Clear local storage
                     localStorage.removeItem('selectedServices');
-                    
+                    localStorage.removeItem('customEvent');
+
                     // Redirect to homepage after 3 seconds
                     setTimeout(() => {
                         window.location.href = '../index.html';
                     }, 3000);
                 }, 2000);
             }
-            
+
             paymentForm.classList.add('was-validated');
         });
 

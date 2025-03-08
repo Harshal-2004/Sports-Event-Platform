@@ -249,8 +249,6 @@
                 requirements: document.getElementById('requirements').value
             };
 
-            console.log('Submitting form data:', formData);  // Added logging
-
             try {
                 const response = await fetch('/api/customize', {
                     method: 'POST',
@@ -261,12 +259,13 @@
                 });
 
                 const result = await response.json();
-                console.log('Server response:', result);  // Added logging
 
                 if (result.status === 'success') {
-                    alert('Your event customization request has been submitted successfully!');
-                    form.reset();
-                    form.classList.remove('was-validated');
+                    // Store event data in localStorage
+                    localStorage.setItem('customEvent', JSON.stringify(formData));
+
+                    // Redirect to checkout page
+                    window.location.href = 'checkout.html?type=event';
                 } else {
                     alert('There was an error submitting your request. Please try again.');
                 }
