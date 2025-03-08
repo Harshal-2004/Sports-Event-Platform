@@ -224,7 +224,25 @@
         });
 
         checkoutButton.addEventListener('click', () => {
-            window.location.href = 'checkout.html';
+            // Create an array of selected services with their details
+            let selectedServicesData = [];
+            
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const service = services[checkbox.value];
+                    selectedServicesData.push({
+                        id: checkbox.value,
+                        name: service.name,
+                        price: service.price
+                    });
+                }
+            });
+            
+            // Store in localStorage
+            localStorage.setItem('selectedServices', JSON.stringify(selectedServicesData));
+            
+            // Navigate to checkout page with services type parameter
+            window.location.href = 'checkout.html?type=service';
         });
     </script>
 </body>

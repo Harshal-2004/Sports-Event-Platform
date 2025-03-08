@@ -263,6 +263,44 @@
                 } else {
                     showEmptyCartMessage(orderItemsContainer);
                 }
+            } else if (orderType === 'service') {
+                // Handle selected services data
+                const servicesData = JSON.parse(localStorage.getItem('selectedServices'));
+                console.log('Services data:', servicesData); // Debug log
+
+                if (servicesData && servicesData.length > 0) {
+                    let servicesHtml = '';
+                    let servicesTotal = 0;
+
+                    servicesData.forEach(service => {
+                        servicesHtml += `
+                            <div class="d-flex justify-content-between align-items-center mb-3 animate__animated animate__fadeIn">
+                                <div>
+                                    <h5>${service.name}</h5>
+                                    <small class="text-muted">Individual service</small>
+                                </div>
+                                <span>$${service.price.toFixed(2)}</span>
+                            </div>
+                        `;
+                        servicesTotal += service.price;
+                    });
+
+                    orderItemsContainer.innerHTML = servicesHtml;
+                    subtotal = servicesTotal;
+
+                    // Create a list of service names for the details section
+                    const serviceNames = servicesData.map(service => service.name).join(', ');
+
+                    orderDetailsContainer.innerHTML = `
+                        <div class="animate__animated animate__fadeIn">
+                            <p><strong>Order Type:</strong> À la carte Services</p>
+                            <p><strong>Services Selected:</strong> ${serviceNames}</p>
+                            <p><strong>Number of Services:</strong> ${servicesData.length}</p>
+                        </div>
+                    `;
+                } else {
+                    showEmptyCartMessage(orderItemsContainer);
+                }
             } else {
                 showEmptyCartMessage(orderItemsContainer);
             }
@@ -321,8 +359,8 @@
                     paymentForm.reset();
                     submitButton.disabled = false;
                     submitButton.innerHTML = 'Pay Now';
-                    localStorage.removeItem('selectedServices');
                     localStorage.removeItem('customEvent');
+                    localStorage.removeItem('selectedServices');
 
                     // Redirect to homepage after 3 seconds
                     setTimeout(() => {
