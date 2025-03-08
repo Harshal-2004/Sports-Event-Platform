@@ -1,0 +1,84 @@
+/* General Styles */
+:root {
+    --header-height: 76px;
+}
+
+body {
+    padding-top: var(--header-height);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://source.unsplash.com/1600x900/?sports,stadium');
+    background-size: cover;
+    background-position: center;
+    height: calc(100vh - var(--header-height));
+    color: white;
+}
+
+/* Client Logos */
+.client-logo {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--bs-dark);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.client-logo:hover {
+    transform: translateY(-5px);
+}
+
+.client-logo i {
+    margin-bottom: 10px;
+    color: var(--bs-primary);
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Form Styling */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Social Media Icons */
+.social-icons a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: var(--bs-primary) !important;
+}
+
+/* WhatsApp Button */
+.btn-whatsapp {
+    background-color: #25D366;
+    border-color: #25D366;
+}
+
+.btn-whatsapp:hover {
+    background-color: #128C7E;
+    border-color: #128C7E;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        height: 60vh;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
