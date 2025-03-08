@@ -1,6 +1,11 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
 from datetime import datetime
 import os
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 from app import app, db
 from models.event import Event
@@ -17,6 +22,7 @@ def serve_pages(path):
 def customize_event():
     try:
         data = request.get_json()
+        logger.info(f"Received event customization request: {data}")
 
         # Convert date string to datetime
         date_str = data.get('eventDate')
@@ -39,6 +45,8 @@ def customize_event():
         db.session.add(new_event)
         db.session.commit()
 
+        logger.info(f"Successfully saved event: {new_event.to_dict()}")
+
         return jsonify({
             "status": "success",
             "message": "Event customization request received",
@@ -46,6 +54,7 @@ def customize_event():
         })
 
     except Exception as e:
+        logger.error(f"Error processing event request: {str(e)}")
         db.session.rollback()
         return jsonify({
             "status": "error",
