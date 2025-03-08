@@ -180,9 +180,33 @@
         </div>
     </footer>
 
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #paymentReceipt, #paymentReceipt * {
+                visibility: visible;
+            }
+            #paymentReceipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 15px;
+            }
+            #paymentReceipt button {
+                display: none;
+            }
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/main.js"></script>
     <script>
+        function printOnlyReceipt() {
+            window.print();
+        }
+        
         // Get order details from URL parameters and localStorage
         const urlParams = new URLSearchParams(window.location.search);
         const orderType = urlParams.get('type');
@@ -400,6 +424,7 @@
                             // Add payment receipt
                             const receiptContainer = document.createElement('div');
                             receiptContainer.className = 'card mt-3 mb-3';
+                            receiptContainer.id = 'paymentReceipt';
                             receiptContainer.innerHTML = `
                                 <div class="card-header bg-success text-white">
                                     <h5 class="mb-0">Test Payment Receipt</h5>
@@ -408,9 +433,10 @@
                                     <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
                                     <p><strong>Amount:</strong> ${totalAmount}</p>
                                     <p><strong>Payment Method:</strong> Credit Card (**** ${document.getElementById('cardNumber').value.slice(-4)})</p>
+                                    <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
                                     <p><strong>Status:</strong> <span class="badge bg-success">PAID</span></p>
                                     <div class="d-grid">
-                                        <button class="btn btn-outline-secondary btn-sm mt-2" onclick="window.print()">
+                                        <button class="btn btn-outline-secondary btn-sm mt-2" onclick="printOnlyReceipt()">
                                             <i class="fas fa-print me-2"></i>Print Receipt
                                         </button>
                                     </div>
