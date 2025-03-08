@@ -57,12 +57,12 @@
                     <div class="card border-secondary">
                         <div class="card-body p-4">
                             <form class="needs-validation" novalidate>
-                                <!-- Location Selection -->
+                                <!-- Sports Selection -->
                                 <div class="mb-4">
-                                    <label for="location" class="form-label h5">
-                                        <i class="fas fa-map-marker-alt me-2"></i>Select Location
+                                    <label for="sportsSelect" class="form-label h5">
+                                        <i class="fas fa-running me-2"></i>Select Sports
                                     </label>
-                                    <select class="form-select" id="location" multiplerequired>
+                                    <select class="form-select" id="sportsSelect" multiple required>
                                         <option value="">Select sports...</option>
                                         <option value="cricket">Cricket</option>
                                         <option value="football">Football</option>
@@ -81,7 +81,8 @@
                                         <option value="gymnastics">Gymnastics</option>
                                     </select>
                                     <div class="invalid-feedback">
-                                    Please select at least one sport.                                    </div>
+                                        Please select at least one sport.
+                                    </div>
                                 </div>
 
                                 <!-- Location Selection -->
@@ -242,12 +243,14 @@
             }
 
             const formData = {
-                sports: Array.from(sportsSelect.selectedOptions).map(opt => opt.value),
+                sports: Array.from(document.getElementById('sportsSelect').selectedOptions).map(opt => opt.value),
                 location: document.getElementById('location').value,
-                eventDate: exactDate.value || monthSelect.value,
-                participants: participantRange.value,
+                eventDate: document.getElementById('exactDate').value,
+                participants: document.getElementById('participants').value,
                 requirements: document.getElementById('requirements').value
             };
+
+            console.log('Form data:', formData); // Debug log
 
             try {
                 const response = await fetch('/api/customize', {
@@ -259,13 +262,13 @@
                 });
 
                 const result = await response.json();
+                console.log('Server response:', result); // Debug log
 
                 if (result.status === 'success') {
                     // Store event data in localStorage
                     localStorage.setItem('customEvent', JSON.stringify(formData));
-
-                    // Redirect to checkout page with type parameter
-                    window.location.href = `checkout.html?type=event`;
+                    // Redirect to checkout page
+                    window.location.href = 'checkout.html?type=event';
                 } else {
                     alert('There was an error submitting your request. Please try again.');
                 }
