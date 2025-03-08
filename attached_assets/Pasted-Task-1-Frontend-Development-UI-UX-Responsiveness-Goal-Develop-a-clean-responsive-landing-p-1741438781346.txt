@@ -1,0 +1,62 @@
+Task 1: Frontend Development (UI/UX & Responsiveness)
+
+Goal: Develop a clean, responsive landing page with essential sections and a user-friendly UI.
+
+Requirements:
+1. Landing Page:
+Header with navigation links (Customize Event, Packages, Services, About Us, Contact).
+Hero section with an engaging banner and CTA buttons.
+Sections for:
+List of previous clients (use placeholder logos).
+Testimonials (use dummy data).
+About Us (brief text).
+Contact Us (simple form + WhatsApp button).
+
+2. Customize Your Event Page:
+Dropdowns for:
+Sport Selection (Multiple choices).
+Location (City-based dropdown).
+Event Date (Month or exact date).
+Number of Participants (Range selection).
+"Connect with Us" buttons (WhatsApp, Google Call).
+
+3. Existing Packages Page:
+Display Platinum & Gold packages (dummy text for now).
+Button to proceed to checkout.
+
+4. Book a Select Service Page:
+Show a list of services as clickable cards (e.g., Umpires, Scorers, Commentators).
+Users can select multiple services and proceed to checkout.
+
+5. Auction Page:
+Placeholder layout for auction feature (sample UI).
+
+6. Wallet / Checkout Page:
+Display management fee calculation (X% for customized orders, fixed amount for packages).
+
+Tech Stack Suggestions:
+Frontend: React.js / Next.js / Vue.js (if modern stack needed) OR plain HTML, CSS, JS (if testing basics).
+Styling: Tailwind CSS / Bootstrap / SCSS.
+
+Task 2: Backend Development (APIs, Database, Checkout Logic)
+
+Goal: Build a backend to handle event customization, bookings, and payment calculations.
+Requirements:
+1. User Authentication (Optional for simplicity)
+Basic user registration & login API.
+
+2. Event Customization API
+Endpoint to receive user selections (sport, location, date, participants).
+Store data in a database (MongoDB / PostgreSQL / MySQL).
+
+3. Packages & Services API
+Fetch details for Platinum & Gold packages.
+Fetch available services for booking.
+Endpoint to submit selected services.
+
+4. Auction API
+Dummy endpoint to store auction-related data (to be integrated later).
+
+Tech Stack Suggestions:
+Backend: Node.js (Express.js) / Django / Flask / Spring Boot.
+Database: MongoDB / PostgreSQL / MySQL.
