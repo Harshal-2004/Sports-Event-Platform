@@ -6,13 +6,16 @@
     <title>Customize Your Event - Sports Event Management</title>
     <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="../css/styles.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="../index.html">SportEvents</a>
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-trophy me-2"></i>SportEvents
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -41,93 +44,133 @@
     <!-- Customize Event Form -->
     <section class="py-5">
         <div class="container">
-            <h1 class="text-center mb-5">Customize Your Event</h1>
+            <div class="text-center mb-5">
+                <h1 class="display-4">Customize Your Event</h1>
+                <p class="lead text-muted">Create your perfect sporting event with our customization options</p>
+            </div>
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form class="needs-validation" novalidate>
-                        <!-- Sport Selection -->
-                        <div class="mb-4">
-                            <label class="form-label">Select Sports</label>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="cricket">
-                                        <label class="form-check-label" for="cricket">Cricket</label>
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body p-4">
+                            <form class="needs-validation" novalidate>
+                                <!-- Sport Selection -->
+                                <div class="mb-4">
+                                    <label for="sportsSelect" class="form-label h5">
+                                        <i class="fas fa-baseball-ball me-2"></i>Select Sports
+                                    </label>
+                                    <select class="form-select" id="sportsSelect" multiple required>
+                                        <option value="cricket">Cricket</option>
+                                        <option value="football">Football</option>
+                                        <option value="basketball">Basketball</option>
+                                        <option value="volleyball">Volleyball</option>
+                                        <option value="tennis">Tennis</option>
+                                        <option value="badminton">Badminton</option>
+                                        <option value="tabletennis">Table Tennis</option>
+                                        <option value="swimming">Swimming</option>
+                                        <option value="athletics">Athletics</option>
+                                        <option value="hockey">Hockey</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select at least one sport.
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="football">
-                                        <label class="form-check-label" for="football">Football</label>
+
+                                <!-- Location Selection -->
+                                <div class="mb-4">
+                                    <label for="location" class="form-label h5">
+                                        <i class="fas fa-map-marker-alt me-2"></i>Select Location
+                                    </label>
+                                    <select class="form-select" id="location" required>
+                                        <option value="">Choose a city...</option>
+                                        <option value="mumbai">Mumbai</option>
+                                        <option value="delhi">Delhi</option>
+                                        <option value="bangalore">Bangalore</option>
+                                        <option value="chennai">Chennai</option>
+                                        <option value="kolkata">Kolkata</option>
+                                        <option value="hyderabad">Hyderabad</option>
+                                        <option value="pune">Pune</option>
+                                        <option value="ahmedabad">Ahmedabad</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a location.
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="basketball">
-                                        <label class="form-check-label" for="basketball">Basketball</label>
+
+                                <!-- Event Date -->
+                                <div class="mb-4">
+                                    <label class="form-label h5">
+                                        <i class="fas fa-calendar-alt me-2"></i>Event Date
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <select class="form-select" id="eventMonth" required>
+                                                <option value="">Select Month...</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="date" class="form-control" id="exactDate">
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please select either a month or an exact date.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Location Selection -->
-                        <div class="mb-4">
-                            <label for="location" class="form-label">Select Location</label>
-                            <select class="form-select" id="location" required>
-                                <option value="">Choose a city...</option>
-                                <option value="mumbai">Mumbai</option>
-                                <option value="delhi">Delhi</option>
-                                <option value="bangalore">Bangalore</option>
-                                <option value="chennai">Chennai</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please select a location.
-                            </div>
-                        </div>
-
-                        <!-- Event Date -->
-                        <div class="mb-4">
-                            <label for="eventDate" class="form-label">Event Date</label>
-                            <input type="date" class="form-control" id="eventDate" required>
-                            <div class="invalid-feedback">
-                                Please select a date.
-                            </div>
-                        </div>
-
-                        <!-- Number of Participants -->
-                        <div class="mb-4">
-                            <label for="participants" class="form-label">Number of Participants</label>
-                            <input type="range" class="form-range" id="participants" min="10" max="100" step="10">
-                            <div class="row">
-                                <div class="col-4">
-                                    <span>Min: 10</span>
+                                <!-- Number of Participants -->
+                                <div class="mb-4">
+                                    <label class="form-label h5">
+                                        <i class="fas fa-users me-2"></i>Number of Participants
+                                    </label>
+                                    <input type="range" class="form-range" id="participants" min="10" max="500" step="10" value="50">
+                                    <div class="row text-muted">
+                                        <div class="col-4">
+                                            <small>Min: 10</small>
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <small id="participantValue">50</small>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <small>Max: 500</small>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-4 text-center">
-                                    <span id="participantValue">50</span>
-                                </div>
-                                <div class="col-4 text-end">
-                                    <span>Max: 100</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Additional Requirements -->
-                        <div class="mb-4">
-                            <label for="requirements" class="form-label">Additional Requirements</label>
-                            <textarea class="form-control" id="requirements" rows="3" placeholder="Any specific requirements or preferences..."></textarea>
-                        </div>
+                                <!-- Additional Requirements -->
+                                <div class="mb-4">
+                                    <label for="requirements" class="form-label h5">
+                                        <i class="fas fa-clipboard-list me-2"></i>Additional Requirements
+                                    </label>
+                                    <textarea class="form-control" id="requirements" rows="3" 
+                                              placeholder="Any specific requirements or preferences..."></textarea>
+                                </div>
 
-                        <!-- Contact Buttons -->
-                        <div class="d-grid gap-3">
-                            <button type="submit" class="btn btn-primary">Submit Request</button>
-                            <a href="https://wa.me/1234567890" class="btn btn-success">
-                                <i class="fab fa-whatsapp me-2"></i>Connect via WhatsApp
-                            </a>
-                            <a href="tel:+1234567890" class="btn btn-info">
-                                <i class="fas fa-phone me-2"></i>Call Us
-                            </a>
+                                <!-- Contact Buttons -->
+                                <div class="d-grid gap-3">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i>Submit Request
+                                    </button>
+                                    <a href="https://wa.me/1234567890" class="btn btn-success">
+                                        <i class="fab fa-whatsapp me-2"></i>Connect via WhatsApp
+                                    </a>
+                                    <a href="tel:+1234567890" class="btn btn-info">
+                                        <i class="fas fa-phone me-2"></i>Call Us
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,15 +193,41 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="../js/main.js"></script>
-    <script src="../js/form-validation.js"></script>
     <script>
+        // Initialize Select2 for multiple select
+        $(document).ready(function() {
+            $('#sportsSelect').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select sports...',
+                allowClear: true
+            });
+        });
+
         // Update participant value display
         const participantRange = document.getElementById('participants');
         const participantValue = document.getElementById('participantValue');
-        
+
         participantRange.addEventListener('input', function() {
             participantValue.textContent = this.value;
+        });
+
+        // Event date handling
+        const monthSelect = document.getElementById('eventMonth');
+        const exactDate = document.getElementById('exactDate');
+
+        monthSelect.addEventListener('change', function() {
+            if (this.value) {
+                exactDate.value = '';
+            }
+        });
+
+        exactDate.addEventListener('change', function() {
+            if (this.value) {
+                monthSelect.value = '';
+            }
         });
     </script>
 </body>
