@@ -3,14 +3,14 @@ from datetime import datetime
 from bson import ObjectId
 
 class Auction:
-    def __init__(self, title, description, starting_price, current_price, end_date, status="active", _id=None):
+    def __init__(self, title, description, starting_price, current_price, end_date, status="active", created_at=None, _id=None):
         self.title = title
         self.description = description
         self.starting_price = starting_price
         self.current_price = current_price
         self.end_date = end_date
         self.status = status
-        self.created_at = datetime.utcnow()
+        self.created_at = created_at if created_at else datetime.utcnow()
         self._id = _id
 
     @classmethod
