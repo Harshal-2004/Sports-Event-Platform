@@ -329,6 +329,7 @@
 
         // Form validation and submission
         const paymentForm = document.getElementById('paymentForm');
+        const totalAmount = document.getElementById('total').textContent;
 
         paymentForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -344,29 +345,98 @@
                     Processing...
                 `;
 
-                // Simulate payment processing
+                // Create a payment progress container
+                const paymentProgressContainer = document.createElement('div');
+                paymentProgressContainer.className = 'mt-4';
+                paymentProgressContainer.innerHTML = `
+                    <h5>Test Payment Process</h5>
+                    <div class="alert alert-info">
+                        <p><strong>Amount:</strong> ${totalAmount}</p>
+                        <p><strong>Card:</strong> **** **** **** ${document.getElementById('cardNumber').value.slice(-4)}</p>
+                        <p><strong>Status:</strong> <span id="paymentStatus">Verifying card details...</span></p>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                `;
+                paymentForm.parentNode.insertBefore(paymentProgressContainer, paymentForm.nextSibling);
+                
+                const paymentStatus = document.getElementById('paymentStatus');
+                const progressBar = paymentProgressContainer.querySelector('.progress-bar');
+
+                // Step 1: Verify card details
                 setTimeout(() => {
-                    // Show success message
-                    const successAlert = document.createElement('div');
-                    successAlert.className = 'alert alert-success mt-3';
-                    successAlert.innerHTML = `
-                        <i class="fas fa-check-circle me-2"></i>
-                        Payment successful! A confirmation email has been sent to your inbox.
-                    `;
-                    paymentForm.parentNode.insertBefore(successAlert, paymentForm.nextSibling);
-
-                    // Reset form and storage
-                    paymentForm.reset();
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = 'Pay Now';
-                    localStorage.removeItem('customEvent');
-                    localStorage.removeItem('selectedServices');
-
-                    // Redirect to homepage after 3 seconds
+                    paymentStatus.textContent = 'Processing payment...';
+                    progressBar.style.width = '50%';
+                    progressBar.setAttribute('aria-valuenow', 50);
+                    
+                    // Step 2: Process payment
                     setTimeout(() => {
-                        window.location.href = '../index.html';
-                    }, 3000);
-                }, 2000);
+                        paymentStatus.textContent = 'Completing transaction...';
+                        progressBar.style.width = '75%';
+                        progressBar.setAttribute('aria-valuenow', 75);
+                        
+                        // Step 3: Finalize transaction
+                        setTimeout(() => {
+                            progressBar.style.width = '100%';
+                            progressBar.setAttribute('aria-valuenow', 100);
+                            progressBar.classList.remove('progress-bar-animated');
+                            
+                            // Show success message
+                            const successAlert = document.createElement('div');
+                            successAlert.className = 'alert alert-success mt-3';
+                            successAlert.innerHTML = `
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Payment Successful!</strong>
+                                <p class="mb-0">Transaction ID: TEST-${Math.floor(Math.random() * 1000000)}</p>
+                                <p class="mb-0">A confirmation email has been sent to ${document.getElementById('email').value}</p>
+                            `;
+                            paymentProgressContainer.parentNode.insertBefore(successAlert, paymentProgressContainer.nextSibling);
+                            
+                            // Update payment status
+                            paymentStatus.textContent = 'Payment completed successfully';
+                            paymentStatus.className = 'text-success fw-bold';
+                            
+                            // Add payment receipt
+                            const receiptContainer = document.createElement('div');
+                            receiptContainer.className = 'card mt-3 mb-3';
+                            receiptContainer.innerHTML = `
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">Test Payment Receipt</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                                    <p><strong>Amount:</strong> ${totalAmount}</p>
+                                    <p><strong>Payment Method:</strong> Credit Card (**** ${document.getElementById('cardNumber').value.slice(-4)})</p>
+                                    <p><strong>Status:</strong> <span class="badge bg-success">PAID</span></p>
+                                    <div class="d-grid">
+                                        <button class="btn btn-outline-secondary btn-sm mt-2" onclick="window.print()">
+                                            <i class="fas fa-print me-2"></i>Print Receipt
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            paymentProgressContainer.parentNode.insertBefore(receiptContainer, successAlert.nextSibling);
+
+                            // Reset form and storage
+                            paymentForm.reset();
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = 'Pay Now';
+                            localStorage.removeItem('customEvent');
+                            localStorage.removeItem('selectedServices');
+
+                            // Add return to home button
+                            const returnButton = document.createElement('div');
+                            returnButton.className = 'd-grid mt-3';
+                            returnButton.innerHTML = `
+                                <button class="btn btn-primary" onclick="window.location.href='../index.html'">
+                                    <i class="fas fa-home me-2"></i>Return to Home
+                                </button>
+                            `;
+                            receiptContainer.parentNode.insertBefore(returnButton, receiptContainer.nextSibling);
+                        }, 1000);
+                    }, 1500);
+                }, 1000);
             }
 
             paymentForm.classList.add('was-validated');
