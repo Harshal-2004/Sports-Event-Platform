@@ -1,22 +1,53 @@
-from datetime import datetime
-from app import db
 
-class Event(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    sports = db.Column(db.JSON, nullable=False)  # Store list of selected sports
-    location = db.Column(db.String(100), nullable=False)
-    event_date = db.Column(db.DateTime, nullable=False)
-    participants = db.Column(db.Integer, nullable=False)
-    requirements = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+from datetime import datetime
+from bson import ObjectId
+
+class Event:
+    def __init__(self, sports, location, event_date, participants, requirements=None, _id=None):
+        self.sports = sports
+        self.location = location
+        self.event_date = event_date
+        self.participants = participants
+        self.requirements = requirements
+        self.created_at = datetime.utcnow()
+        self._id = _id
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create an Event object from a dictionary"""
+        if '_id' in data:
+            data['_id'] = str(data['_id']) if isinstance(data['_id'], ObjectId) else data['_id']
+        return cls(**data)
 
     def to_dict(self):
-        return {
-            'id': self.id,
+        """Convert Event object to a dictionary"""
+        result = {
             'sports': self.sports,
             'location': self.location,
-            'event_date': self.event_date.isoformat(),
+            'event_date': self.event_date.isoformat() if isinstance(self.event_date, datetime) else self.event_date,
             'participants': self.participants,
             'requirements': self.requirements,
-            'created_at': self.created_at.isoformat()
+            'created_at': self.created_at.isoformat() if isinstance(self.created_at, datetime) else self.created_at
         }
+        if hasattr(self, '_id') and self._id:
+            result['id'] = str(self._id)
+        return result
+
+    def save(self, collection):
+        """Save event to MongoDB collection"""
+        event_dict = {
+            'sports': self.sports,
+            'location': self.location,
+            'event_date': self.event_date,
+            'participants': self.participants,
+            'requirements': self.requirements,
+            'created_at': self.created_at
+        }
+        
+        if hasattr(self, '_id') and self._id:
+            collection.update_one({'_id': ObjectId(self._id)}, {'$set': event_dict})
+        else:
+            result = collection.insert_one(event_dict)
+            self._id = result.inserted_id
+            
+        return self

@@ -1,3 +1,4 @@
+
 import os
 from dotenv import load_dotenv
 
@@ -5,28 +6,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
+from flask_pymongo import PyMongo
 
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "default_secret_key_for_development")
 
-# Configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# Configure MongoDB
+app.config["MONGO_URI"] = os.environ.get("MONGODB_URI", "mongodb://localhost:27017/sports_events")
+mongo = PyMongo(app)
 
-# Initialize the app with the extension
-db.init_app(app)
-
+# Initialize collections
 with app.app_context():
-    # Import models here
-    from models.event import Event
-    db.create_all()
+    # These are our main collections
+    events_collection = mongo.db.events
+    services_collection = mongo.db.services
+    packages_collection = mongo.db.packages
+    auctions_collection = mongo.db.auctions
