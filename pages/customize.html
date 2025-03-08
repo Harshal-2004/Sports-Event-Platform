@@ -242,18 +242,76 @@
                 return;
             }
 
+            const sportsSelection = Array.from(document.getElementById('sportsSelect').selectedOptions).map(opt => opt.value);
+            const locationInput = document.getElementById('location').value;
+            const dateInput = document.getElementById('exactDate').value;
+            const participantsInput = document.getElementById('participants').value;
+            const requirementsInput = document.getElementById('requirements').value;
+
             const formData = {
-                sports: Array.from(document.getElementById('sportsSelect').selectedOptions).map(opt => opt.value),
-                location: document.getElementById('location').value,
-                eventDate: document.getElementById('exactDate').value,
-                participants: document.getElementById('participants').value,
-                requirements: document.getElementById('requirements').value
+                sports: sportsSelection,
+                location: locationInput,
+                eventDate: dateInput,
+                participants: participantsInput,
+                requirements: requirementsInput
             };
 
-            console.log('Form data:', formData); // Debug log
-            
-            // Save event data and redirect to checkout
-            saveEventData(formData);
+
+            // Simulated API call (replace with actual API call)
+            const response = await fetch('/api/saveEvent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+
+            response.json()
+                    .then(data => {
+                        console.log('Saved event data:', data);
+
+                        // Store event data for checkout with ID
+                        const eventData = {
+                            id: data.data.id,
+                            sports: sportsSelection,
+                            location: locationInput,
+                            eventDate: dateInput,
+                            participants: participantsInput,
+                            requirements: requirementsInput
+                        };
+
+                        localStorage.setItem('customEvent', JSON.stringify(eventData));
+                        localStorage.setItem('cartItems', JSON.stringify([{
+                            type: 'event',
+                            name: 'Custom Sports Event',
+                            details: `${sportsSelection.join(', ')} | ${locationInput} | ${participantsInput} participants`,
+                            price: 1500 // Base price for custom event
+                        }]));
+
+                        // Set order type for checkout
+                        localStorage.setItem('orderType', 'event');
+
+                        // Show success message and redirect
+                        Swal.fire({
+                            title: 'Event Request Submitted!',
+                            text: 'Proceeding to checkout...',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/pages/checkout.html';
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error saving event data:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to submit event request. Please try again later.',
+                            icon: 'error'
+                        });
+                    });
+
         });
     </script>
 </body>

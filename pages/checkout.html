@@ -396,6 +396,60 @@
                         paymentData.service_ids = servicesData.map(service => service.id);
                     }
                 } else if (orderType === 'package') {
+                    const packageData = JSON.parse(localStorage.getItem('selectedPackage'));
+                    if (packageData && packageData.id) {
+                        paymentData.package_id = packageData.id;
+                    }
+                } else if (orderType === 'auction') {
+                    const auctionData = JSON.parse(localStorage.getItem('wonAuction'));
+                    if (auctionData && auctionData.id) {
+                        paymentData.auction_id = auctionData.id;
+                    }
+                }
+                
+                // Send payment data to backend
+                fetch('/api/payments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paymentData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Payment processed:', data);
+                    // Show success message
+                    const paymentCard = document.querySelector('.payment-card');
+                    paymentCard.innerHTML = `
+                        <div class="text-center p-4">
+                            <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+                            <h3>Payment Successful!</h3>
+                            <p>Your payment of ${document.getElementById('total').textContent} has been processed successfully.</p>
+                            <p>Order ID: ${data.data.id || 'N/A'}</p>
+                            <a href="/" class="btn btn-primary mt-3">Return to Home</a>
+                        </div>
+                    `;
+                    
+                    // Clear cart data
+                    localStorage.removeItem('customEvent');
+                    localStorage.removeItem('selectedServices');
+                    localStorage.removeItem('selectedPackage');
+                    localStorage.removeItem('wonAuction');
+                    localStorage.removeItem('cartItems');
+                })
+                .catch(error => {
+                    console.error('Error processing payment:', error);
+                    // Show error message
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'Complete Payment';
+                    
+                    const alertBox = document.createElement('div');
+                    alertBox.className = 'alert alert-danger mt-3';
+                    alertBox.textContent = 'Payment failed. Please try again.';
+                    paymentForm.prepend(alertBox);
+                });ce.id);
+                    }
+                } else if (orderType === 'package') {
                     const package = urlParams.get('package');
                     if (package) {
                         // We'll need the actual package ID here, but for now we'll use a placeholder

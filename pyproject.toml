@@ -13,4 +13,5 @@ dependencies = [
     "pymongo>=4.11.2",
     "python-dotenv>=1.0.1",
     "sqlalchemy>=2.0.38",
+    "bson>=0.5.10",
 ]
