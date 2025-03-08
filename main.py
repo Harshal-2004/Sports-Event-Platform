@@ -1,10 +1,9 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
+from datetime import datetime
 import os
 
-app = Flask(__name__, 
-            static_url_path='',
-            static_folder='.',
-            template_folder='.')
+from app import app, db
+from models.event import Event
 
 @app.route('/')
 def home():
@@ -16,13 +15,42 @@ def serve_pages(path):
 
 @app.route('/api/customize', methods=['POST'])
 def customize_event():
-    data = request.get_json()
-    # TODO: Implement database storage
-    return jsonify({
-        "status": "success",
-        "message": "Event customization request received",
-        "data": data
-    })
+    try:
+        data = request.get_json()
+
+        # Convert date string to datetime
+        date_str = data.get('eventDate')
+        if len(date_str) <= 2:  # If it's just a month number
+            current_year = datetime.now().year
+            event_date = datetime(current_year, int(date_str), 1)
+        else:
+            event_date = datetime.strptime(date_str, '%Y-%m-%d')
+
+        # Create new event
+        new_event = Event(
+            sports=data.get('sports'),
+            location=data.get('location'),
+            event_date=event_date,
+            participants=int(data.get('participants')),
+            requirements=data.get('requirements')
+        )
+
+        # Save to database
+        db.session.add(new_event)
+        db.session.commit()
+
+        return jsonify({
+            "status": "success",
+            "message": "Event customization request received",
+            "data": new_event.to_dict()
+        })
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

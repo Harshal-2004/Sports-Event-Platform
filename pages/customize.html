@@ -57,12 +57,12 @@
                     <div class="card border-secondary">
                         <div class="card-body p-4">
                             <form class="needs-validation" novalidate>
-                                <!-- Sport Selection -->
+                                <!-- Location Selection -->
                                 <div class="mb-4">
-                                    <label for="sportsSelect" class="form-label h5">
-                                        <i class="fas fa-baseball-ball me-2"></i>Select Sports
+                                    <label for="location" class="form-label h5">
+                                        <i class="fas fa-map-marker-alt me-2"></i>Select Location
                                     </label>
-                                    <select class="form-select" id="sportsSelect" multiple required>
+                                    <select class="form-select" id="location" multiplerequired>
                                         <option value="">Select sports...</option>
                                         <option value="cricket">Cricket</option>
                                         <option value="football">Football</option>
@@ -81,10 +81,9 @@
                                         <option value="gymnastics">Gymnastics</option>
                                     </select>
                                     <div class="invalid-feedback">
-                                        Please select at least one sport.
-                                    </div>
+                                    Please select at least one sport.                                    </div>
                                 </div>
-
+                                
                                 <!-- Location Selection -->
                                 <div class="mb-4">
                                     <label for="location" class="form-label h5">
@@ -112,7 +111,7 @@
                                         <i class="fas fa-calendar-alt me-2"></i>Event Date
                                     </label>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <!-- <div class="col-md-6 mb-3">
                                             <select class="form-select" id="eventMonth" required>
                                                 <option value="">Select Month...</option>
                                                 <option value="1">January</option>
@@ -128,7 +127,7 @@
                                                 <option value="11">November</option>
                                                 <option value="12">December</option>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         <div class="col-md-6">
                                             <input type="date" class="form-control" id="exactDate">
                                         </div>
