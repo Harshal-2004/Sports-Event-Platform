@@ -425,13 +425,15 @@
                             const receiptContainer = document.createElement('div');
                             receiptContainer.className = 'card mt-3 mb-3';
                             receiptContainer.id = 'paymentReceipt';
+                            // Get the actual total amount from the page
+                            const actualTotalAmount = document.getElementById('total').textContent;
                             receiptContainer.innerHTML = `
                                 <div class="card-header bg-success text-white">
                                     <h5 class="mb-0">Test Payment Receipt</h5>
                                 </div>
                                 <div class="card-body">
                                     <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-                                    <p><strong>Amount:</strong> ${totalAmount}</p>
+                                    <p><strong>Amount:</strong> ${actualTotalAmount}</p>
                                     <p><strong>Payment Method:</strong> Credit Card (**** ${document.getElementById('cardNumber').value.slice(-4)})</p>
                                     <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
                                     <p><strong>Status:</strong> <span class="badge bg-success">PAID</span></p>
