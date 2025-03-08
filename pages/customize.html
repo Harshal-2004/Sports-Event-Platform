@@ -264,8 +264,8 @@
                     // Store event data in localStorage
                     localStorage.setItem('customEvent', JSON.stringify(formData));
 
-                    // Redirect to checkout page
-                    window.location.href = 'checkout.html?type=event';
+                    // Redirect to checkout page with type parameter
+                    window.location.href = `checkout.html?type=event`;
                 } else {
                     alert('There was an error submitting your request. Please try again.');
                 }
